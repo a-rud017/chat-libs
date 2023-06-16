@@ -10,6 +10,8 @@ app.use(express.json())
 
 // app.use('chatlibs', chatlibsRoutes)
 
+const chatlibs = require('./models/chatlibs')
+
 app.get('/', async (req, res) => {
     try {
         res.render('index.ejs')    
@@ -17,6 +19,12 @@ app.get('/', async (req, res) => {
     catch (error) {
         console.error(error)
     }
+})
+
+app.get('/chatlibs/:category', (req, res) => {
+    const category = req.params.category
+    const chatlib = chatlibs.getRandomChatLib(category)
+    res.json({ chatlib })
 })
 
 app.listen(PORT, () => {
