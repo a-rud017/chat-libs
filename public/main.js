@@ -32,45 +32,24 @@ function renderChatLib(chatlib) {
 
 function speakChatLib() {
     const inputs = chatlibContainer.querySelectorAll('input');
+    const title = currentChatlib.title
     let finalChatLib = currentChatlib.template;
   
     inputs.forEach((input) => {
-      const value = input.value;
-      const placeholder = input.getAttribute('placeholder');
-      finalChatLib = finalChatLib.replace(`[${placeholder}]`, value);
+        const value = input.value;
+        const placeholder = input.getAttribute('placeholder');
+        finalChatLib = finalChatLib.replace(`[${placeholder}]`, value);
     });
   
-    const utterance = new SpeechSynthesisUtterance(finalChatLib);
+    const utterance = new SpeechSynthesisUtterance();
+    utterance.text = `${title}. ${finalChatLib}`
+
+    utterance.addEventListener('start', () => {
+        setTimeout(() => {
+            speechSynthesis.resume()
+        }, 500)
+    })
+
     speechSynthesis.speak(utterance);
     outputContainer.textContent = finalChatLib;
-  }
-  
-  
-
-
-
-// function speakChatLib() {
-//     const inputs = chatlibContainer.querySelectorAll('input');
-//     const chatlibTemplate = chatlibContainer.querySelector('p').innerHTML;
-//     let finalChatLib = chatlibTemplate;
-  
-//     inputs.forEach((input) => {
-//       const value = input.value;
-//       const placeholder = input.getAttribute('placeholder');
-//       finalChatLib = finalChatLib.replace(`[${placeholder}]`, value);
-//     });
-  
-//     finalChatLib = stripHTML(finalChatLib); // Strip HTML tags from the final chatlib
-  
-//     const utterance = new SpeechSynthesisUtterance(finalChatLib);
-//     speechSynthesis.speak(utterance);
-//     outputContainer.textContent = finalChatLib;
-//   }
-  
-  
-
-function stripHTML(html) {
-    const tmpElement = document.createElement('div');
-    tmpElement.innerHTML = html;
-    return tmpElement.textContent || tmpElement.innerText || '';
 }
