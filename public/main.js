@@ -85,6 +85,10 @@ function renderChatLib(chatlib) {
     chatlibHtml = chatlibHtml.replace(/\[(.*?)]/g, '<input type="text" placeholder="$1">')
 
     chatlibContainer.innerHTML = chatlibHtml
+
+    const submittedChatlibContainer = document.createElement('div')
+    submittedChatlibContainer.id = 'submittedChatlibContainer'
+    chatlibContainer.appendChild(submittedChatlibContainer)
 }
 
 function speakChatLib() {
@@ -116,6 +120,13 @@ function speakChatLib() {
 
         speechSynthesis.speak(utterance);
         outputContainer.textContent = finalChatLib;
+
+        const generatedChatlibContainer = document.getElementById('chatlibContainer')
+        generatedChatlibContainer.style.display = 'none'
+
+        const submittedChatlibContainer = document.getElementById('submittedChatlibContainer')
+        submittedChatlibContainer.style.display = 'block'
+        submittedChatlibContainer.textContent = finalChatLib
     } else {
         alert('Selected voice is not available.')
     }
