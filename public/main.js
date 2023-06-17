@@ -12,7 +12,21 @@ let currentChatlib = null
 let voicesLoaded = false
 
 function loadVoices() {
-    const voices = speechSynthesis.getVoices()
+    return new Promise((resolve, reject) => {
+        let voices = speechSynthesis.getVoices();
+        if (voices.length !== 0) {
+            resolve(voices);
+        } else {
+            setTimeout(() => {
+                voices = speechSynthesis.getVoices();
+                resolve(voices);
+        }, 1000);
+        }
+    });
+}
+
+function populateVoiceSelect(voices) {
+    voiceSelect.innerHTML = ''
 
     voices.forEach((voice) => {
         const option = document.createElement('option')
@@ -24,10 +38,15 @@ function loadVoices() {
     voicesLoaded = true
 }
 
-voiceSelect.addEventListener('change', () => {
-    const selectedVoice = voiceSelect.value
-    setVoice(selectedVoice)
-})
+function initializeVoices() {
+    loadVoices()
+        .then((voices) => {
+            populateVoiceSelect(voices)
+        })
+        .catch((error) => {
+            console.error('Error loading voices:', error)
+        })
+}
 
 function setVoice(voiceName) {
     const voices = speechSynthesis.getVoices()
@@ -37,6 +56,13 @@ function setVoice(voiceName) {
         speechSynthesis.voice = selectedVoice
     }
 }
+
+initializeVoices()
+
+voiceSelect.addEventListener('change', () => {
+    const selectedVoice = voiceSelect.value
+    setVoice(selectedVoice)
+})
 
 window.speechSynthesis.onvoiceschanged = loadVoices
 
@@ -62,10 +88,6 @@ function renderChatLib(chatlib) {
 }
 
 function speakChatLib() {
-    // if (!voicesLoaded) {
-    //     alert('Voices are still loading. Please wait a moment and try again.')
-    //     return
-    // }
     const inputs = chatlibContainer.querySelectorAll('input');
     const title = currentChatlib.title
     let finalChatLib = currentChatlib.template;
