@@ -74,7 +74,39 @@ voiceSelect.addEventListener('change', () => {
 
 window.speechSynthesis.onvoiceschanged = loadVoices
 
+let speaking = false
+
+function stopSpeaking() {
+    if (speaking) {
+        speechSynthesis.cancel();
+        speaking = false
+    }
+    
+
+    const controlsContainer = document.getElementById('controlsContainer');
+    if (controlsContainer) {
+        controlsContainer.remove();
+    }
+}
+
+function resetChatLib() {
+    const submittedChatlibContainer = document.getElementById('submittedChatlibContainer');
+    if (submittedChatlibContainer) {
+        submittedChatlibContainer.textContent = '';
+    }
+
+    const generatedChatlibContainer = document.getElementById('chatlibContainer');
+    if (generatedChatlibContainer) {
+        generatedChatlibContainer.style.display = 'block';
+    }
+
+    outputContainer.textContent = '';
+}
+
 function generateChatLib() {
+    resetChatLib()
+    stopSpeaking()
+
     const selectedCategory = categorySelect.value
     if (selectedCategory) {
         fetch(`/chatlibs/${selectedCategory}`)
@@ -100,6 +132,8 @@ function renderChatLib(chatlib) {
 }
 
 function speakChatLib() {
+    stopSpeaking()
+
     const inputs = chatlibContainer.querySelectorAll('input');
     const title = currentChatlib.title
     let finalChatLib = currentChatlib.template;
@@ -115,6 +149,8 @@ function speakChatLib() {
     const voice = voices.find((v) => v.name === selectedVoice)
   
     if (voice) {
+        speaking = true
+
         const utterance = new SpeechSynthesisUtterance();
         utterance.text = `${title}. ${finalChatLib}`
         utterance.rate = 0.8
@@ -135,7 +171,32 @@ function speakChatLib() {
         const submittedChatlibContainer = document.getElementById('submittedChatlibContainer')
         submittedChatlibContainer.style.display = 'block'
         submittedChatlibContainer.textContent = finalChatLib
+
+        const stopButton = document.createElement('button');
+        stopButton.classList.add('voice-button')
+        stopButton.textContent = 'Stop';
+        stopButton.addEventListener('click', () => {
+            speechSynthesis.pause();
+        });
+    
+        const resumeButton = document.createElement('button');
+        resumeButton.classList.add('voice-button')
+        resumeButton.textContent = 'Resume';
+        resumeButton.addEventListener('click', () => {
+            speechSynthesis.resume();
+        });
+    
+        const controlsContainer = document.createElement('div');
+        controlsContainer.id = 'controlsContainer';
+        controlsContainer.appendChild(stopButton);
+        controlsContainer.appendChild(resumeButton);
+    
+        outputContainer.appendChild(controlsContainer)
     } else {
         alert('Selected voice is not available.')
     }
 }
+
+window.addEventListener('beforeunload', () => {
+    stopSpeaking()
+})
