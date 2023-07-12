@@ -82,7 +82,6 @@ function stopSpeaking() {
         speaking = false
     }
     
-
     const controlsContainer = document.getElementById('controlsContainer');
     if (controlsContainer) {
         controlsContainer.remove();
