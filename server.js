@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
-const PORT = 3000
+
+require('dotenv').config({path: './config/.env'})
 
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
@@ -24,6 +25,6 @@ app.get('/chatlibs/:category', (req, res) => {
     res.json({ chatlib })
 })
 
-app.listen(PORT, () => {
-    console.log(`Server running on ${PORT}`)
+app.listen(process.env.PORT, () => {
+    console.log(`Server running on ${process.env.PORT}`)
 })
