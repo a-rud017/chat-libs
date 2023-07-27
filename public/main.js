@@ -171,6 +171,10 @@ function speakChatLib() {
         submittedChatlibContainer.style.display = 'block'
         submittedChatlibContainer.textContent = finalChatLib
 
+        const titleElement = document.createElement('h3')
+        titleElement.textContent = title
+        outputContainer.prepend(titleElement)
+
         const stopButton = document.createElement('button');
         stopButton.classList.add('voice-button')
         stopButton.textContent = 'Stop';
