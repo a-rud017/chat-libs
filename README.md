@@ -1,7 +1,7 @@
 # ChatLibs
 ChatLibs is an app inspired by the classic template word game Mad Libs and uses ChatGPT to generate templates. 
 
-**Link to project:** https://chatlibs.cyclic.app/
+**Link to project:** https://chatlibs-y1rh.onrender.com
 
 
 <img width="584" alt="chatlibs-screenshot" src="https://github.com/a-rud017/chat-libs/assets/109028773/6010d259-ae48-4e0f-bb4c-c9a66dd63b58">
